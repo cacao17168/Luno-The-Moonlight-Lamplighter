@@ -3,6 +3,8 @@
 #include "input.h"
 #include <SDL2/SDL.h>
 
+static bool fullscreen;
+
 typedef enum {
     falling,
     lifting
