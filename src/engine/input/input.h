@@ -2,8 +2,6 @@
 #ifndef INPUT_H_
 #define INPUT_H_
 
-static bool fullscreen;
-
 typedef enum {
     KEY_W,
     KEY_A,
@@ -13,8 +11,6 @@ typedef enum {
     KEY_F11,
     KEY_NONE
 } keytype;
-
-int InputInit();
 
 bool KeyPressed();
 
