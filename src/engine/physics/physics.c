@@ -15,9 +15,9 @@ void jump(int jmpspd, player* plyr, float dt) {
     printf("jump processed\n");
 }
 
-int update(keytype key, float dt, player* Pl, SDL_Window* window) {
-const Uint8* keys = SDL_GetKeyboardState(NULL); 
-    if (keys[SDL_SCANCODE_A] && !keys[SDL_SCANCODE_D]) {
+int update(keytype keys[], float dt, player* Pl, SDL_Window* window) { 
+
+    if (keys[KEY_A] && !keys[KEY_D]) {
         speed += (ACCELERATION * dt) ;
         
         if (speed > 150) speed = 150;
@@ -29,7 +29,7 @@ const Uint8* keys = SDL_GetKeyboardState(NULL);
         printf("a: %f\n", speed * dt);
     }
 
-    if (keys[SDL_SCANCODE_D] && !keys[SDL_SCANCODE_A]) {
+    if (keys[KEY_D] && !keys[KEY_A]) {
         speed += ACCELERATION * dt;
         
         if (speed > 150) speed = 150;
@@ -41,10 +41,10 @@ const Uint8* keys = SDL_GetKeyboardState(NULL);
         printf("d: %f\n", speed * dt);
     }
     
-    if (!keys[SDL_SCANCODE_A] && !keys[SDL_SCANCODE_D]) speed = 0;
-    if (!keys[SDL_SCANCODE_SPACE] && Pl->y == 300 - 32) Pl->vy = 0;
+    if (!keys[KEY_A] && !keys[KEY_D]) speed = 0;
+    if (!keys[KEY_SPACE] && Pl->y == 300 - 32) Pl->vy = 0;
     
-    if (keys[SDL_SCANCODE_SPACE]) {
+    if (keys[KEY_SPACE]) {
         printf("space catched\n");
         if (Pl->y == 300 - 32) {
             Pl->state = lifting;
@@ -65,7 +65,7 @@ const Uint8* keys = SDL_GetKeyboardState(NULL);
         printf("jump processed\n");
     }
     
-    if (key == KEY_F11) {
+    if (keys[KEY_F11]) {
         //printf("Key catched\n");
         if (!fullscreen) {
             SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
@@ -77,4 +77,5 @@ const Uint8* keys = SDL_GetKeyboardState(NULL);
             fullscreen = false;
         }
     }
+    return 0;
 }

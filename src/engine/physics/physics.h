@@ -18,6 +18,6 @@ typedef struct {
 } player;
 
 //only 1 function will need in main file
-int update(keytype key, float dt, player* Pl, SDL_Window* window);
+int update(keytype keys[], float dt, player* Pl, SDL_Window* window);
 
 #endif

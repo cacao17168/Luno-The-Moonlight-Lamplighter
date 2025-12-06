@@ -20,7 +20,7 @@ int main() {
 bool is_running = true;
 SDL_Event e;
 SDL_Window* window;
-keytype pressedkey;
+keytype pressedkeys[KEY_COUNT] = {0};
 player Player = {0, 300 - 35, 0, falling};
 
 SDL_Rect *rects[N];
@@ -85,7 +85,6 @@ float frame_start, frame_end, frame_duration;
     previous_time = SDL_GetTicks();
     
     while(is_running) {
-        pressedkey = KEY_NONE;
         frame_start = SDL_GetTicks();
         current_time = SDL_GetTicks();
         
@@ -101,12 +100,12 @@ float frame_start, frame_end, frame_duration;
                 is_running = false;
             }
             
-            if (KeyPressed(&e) == true) {
-                pressedkey = Getkey(&e);
+            if (KeyPressed(&e)) {
+                Getkey(pressedkeys);
             }
         }
         
-        update(pressedkey, delta_time, &Player, window);
+        update(pressedkeys, delta_time, &Player, window);
         //printf("physics updated\n");
         
         rects[0]->x = Player.x;
