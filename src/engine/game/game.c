@@ -99,11 +99,9 @@ float frame_start, frame_end, frame_duration;
             if (e.type == SDL_QUIT) {
                 is_running = false;
             }
-            
-            if (KeyPressed(&e)) {
-                Getkey(pressedkeys);
-            }
         }
+        
+        Getkey(pressedkeys);
         
         update(pressedkeys, delta_time, &Player, window);
         //printf("physics updated\n");
