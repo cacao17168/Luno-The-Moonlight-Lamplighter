@@ -10,7 +10,7 @@ int KeyPressed(SDL_Event* ev) {
     }
 }
 
-int Getkey(keytype *keys[]) {
+int Getkey(keytype keys[]) {
     if (!keys) {
         return 1;
     }
