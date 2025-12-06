@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <SDL2/SDL.h>
 #ifndef INPUT_H_
 #define INPUT_H_
 
@@ -9,11 +10,11 @@ typedef enum {
     KEY_D,
     KEY_SPACE,
     KEY_F11,
-    KEY_NONE
+    KEY_COUNT
 } keytype;
 
-bool KeyPressed();
+int KeyPressed(SDL_Event* ev);
 
-keytype Getkey();
+int Getkey(keytype *keys[]);
 
 #endif
