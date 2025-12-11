@@ -13,30 +13,29 @@
 
 void sighand(int sig) {
     printf("segmentation fault caught\n");
-    abort();
+    SDL_Quit();
+    exit(1);
 }
 
 int main() {
+
+SpriteList* sprites = SpriteList_Create();
+
 bool is_running = true;
+
 SDL_Event e;
 SDL_Window* window;
+SDL_Rect plyrdst = {0, 0, 32, 32};
+SDL_Rect bckgrnd = {0, 0, 640, 360};
+
 keytype pressedkeys[KEY_COUNT] = {0};
 player Player = {0, 300 - 35, 0, falling};
 
-SDL_Rect *rects[N];
-    for(int i = 0; i < N; i++) {
-        rects[i] = malloc(sizeof(SDL_Rect));
-        if (!rects[i]) {
-            printf("memory alloc failed\n");
-            break;
-        }
-    }
-
-SDL_Texture* textures[N];
-
 float current_time, previous_time, delta_time;
 float frame_start, frame_end, frame_duration;
+
     signal(SIGSEGV, sighand);
+    
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("Error during SDL initialization: %s\n", SDL_GetError());
         return 1;
@@ -64,23 +63,13 @@ float frame_start, frame_end, frame_duration;
     
     InitRenderer(window, 640, 360);
     
+    sprites = SpriteList_Init(sprites, "assets/images/playermodel.png", plyrdst);
+    assert(sprites->Items);
+    
+    sprites = SpriteList_Add(sprites, "assets/images/background.png", bckgrnd);
+    assert(sprites->Items);
+    
     DrawBackground();
-    
-    textures[0] = LoadTexture("./assets/images/playermodel.png");
-    assert(textures[0]);
-    
-    rects[0]->x = 0;
-    rects[0]->y = 0;
-    rects[0]->w = 32;
-    rects[0]->h = 32;
-    
-    textures[1] = LoadTexture("./assets/images/background.png");
-    assert(textures[1]);
-    
-    rects[1]->x = 0;
-    rects[1]->y = 0;
-    rects[1]->w = 640;
-    rects[1]->h = 360;
     
     previous_time = SDL_GetTicks();
     
@@ -106,10 +95,10 @@ float frame_start, frame_end, frame_duration;
         update(pressedkeys, delta_time, &Player, window);
         //printf("physics updated\n");
         
-        rects[0]->x = Player.x;
-        rects[0]->y = Player.y;
+        sprites->Items[0].rect.x = Player.x;
+        sprites->Items[0].rect.y = Player.y;
         
-        Render(textures, rects, N);
+        Render(sprites);
         //printf("rendered\n");
         
         frame_end = SDL_GetTicks();
@@ -121,10 +110,8 @@ float frame_start, frame_end, frame_duration;
     }
     
     SDL_DestroyWindow(window);
+    SpriteList_Destroy(sprites);
     SDL_Quit();
-    for(int i = 0; i < N; i++) {
-        free(rects[i]);
-    }
     
     return 0;
 }
