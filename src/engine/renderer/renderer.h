@@ -1,5 +1,6 @@
 #ifndef RENDERER_H_
 #define RENDERER_H_
+#include "physics.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -27,7 +28,7 @@ void DrawBackground();
 
 SDL_Texture* LoadTexture(const char *path);
 
-int Render(SpriteList* sprites);
+int Render(SpriteList* sprites, game_properties *Props);
 
 void SetWindowIcon(SDL_Window* window, const char *path);
 

@@ -94,7 +94,7 @@ SDL_Texture* LoadTexture(const char *path) {
     return Loadedtexture;
 }
 
-int Render(SpriteList* sprites) {
+int Render(SpriteList* sprites, game_properties *Props) {
     if (!sprites) {
         return 1;
     }
@@ -109,7 +109,11 @@ int Render(SpriteList* sprites) {
             printf("Texture has Null pointer\n");
             continue;
         }
-        SDL_RenderCopy(renderer, sprites->Items[i].texture, NULL, &sprites->Items[i].rect);
+        SDL_Rect dst = sprites->Items[i].rect;
+        dst.x -= Props->Camera.x;
+        dst.y -= Props->Camera.y;
+
+        SDL_RenderCopy(renderer, sprites->Items[i].texture, NULL, &dst);
     }
     //printf("Textures copied\n");
     
