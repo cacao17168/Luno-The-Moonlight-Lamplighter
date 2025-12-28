@@ -32,10 +32,12 @@ void jump(player* plyr, float dt, game_properties *Props) {
     Props->Camera.y -= ceil(plyr->vy * dt);
     plyr->vy -= 7.5f;
     printf("jump changed: %f\n", ceil(plyr->vy * dt));
+    printf("y = %d\n", plyr->hitbox.y);
     printf("jump processed\n");
 }
 
-int update(keytype keys[], float dt, player* Pl, SDL_Window* window, game_properties *Props) { 
+int update(keytype keys[], float dt, player* Pl, SDL_Window* window, game_properties *Props) {
+    int grnd = Props->Size.h - Pl->hitbox.h; 
 
     if (keys[KEY_A] && !keys[KEY_D]) {
         speed += (ACCELERATION * dt) ;
@@ -44,6 +46,7 @@ int update(keytype keys[], float dt, player* Pl, SDL_Window* window, game_proper
         printf("x a before: %d\n", Pl->hitbox.x);
         
         Pl->hitbox.x -= floor(speed * dt) ;
+        Props->Camera.x -= floor(speed * dt);
         
         printf("x a after: %d\n", Pl->hitbox.x);
         printf("a: %f\n", speed * dt);
@@ -63,11 +66,12 @@ int update(keytype keys[], float dt, player* Pl, SDL_Window* window, game_proper
     }
     
     if (!keys[KEY_A] && !keys[KEY_D]) speed = 0;
-    if (Pl->hitbox.y == Props->Size.y - Pl->hitbox.y) Pl->vy = 0;
+    if (Pl->hitbox.y >= grnd) Pl->vy = 0;
     
     if (keys[KEY_SPACE]) {
         printf("space catched\n");
-        if (Pl->hitbox.y == Props->Size.y - Pl->hitbox.y) {
+        if (Pl->hitbox.y >= grnd) {
+            Pl->hitbox.y = grnd;
             Pl->state = lifting;
             Pl->vy = 250.0f;
             printf("ground check completed\n");
@@ -75,15 +79,17 @@ int update(keytype keys[], float dt, player* Pl, SDL_Window* window, game_proper
     }
     
     if (Pl->state == lifting) jump(Pl, dt, Props);
-    if (Pl->hitbox.y <= Props->Size.y - Pl->hitbox.y - JUMP_SCALE) Pl->state = falling;
+    if (Pl->hitbox.y <= grnd - JUMP_SCALE) Pl->state = falling;
     printf("state processed\n");
     
-    if (Pl->state == falling && Pl->hitbox.y != Props->Size.y - Pl->hitbox.y) {
+    if (Pl->state == falling && Pl->hitbox.y <= grnd) {
         Pl->vy += 1.0f;
         if (Pl->vy > 75.0f) Pl->vy = 75.0f;
         
         Pl->hitbox.y += ceil(Pl->vy * dt);
+        Props->Camera.y += ceil(Pl->vy * dt);
         printf("falled %f pixels\n", ceil(Pl->vy * dt));
+        printf("y = %d\n", Pl->hitbox.y);
         printf("jump processed\n");
     }
     
