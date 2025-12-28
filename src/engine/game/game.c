@@ -1,4 +1,3 @@
-#include <signal.h>
 #include <assert.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -9,32 +8,24 @@
 
 #define FPS 60
 #define ONE_FRAME (1000.0f / FPS)
-#define N 2
-
-void sighand(int sig) {
-    printf("segmentation fault caught\n");
-    SDL_Quit();
-    exit(1);
-}
 
 int main() {
 
 SpriteList* sprites = SpriteList_Create();
+    game_properties Game = {0};
 
-bool is_running = true;
+    bool is_running = true;
 
-SDL_Event e;
-SDL_Window* window;
-SDL_Rect plyrdst = {0, 0, 32, 32};
-SDL_Rect bckgrnd = {0, 0, 640, 360};
+    SDL_Event e;
+    SDL_Window* window;
+    SDL_Rect plyrdst = {0, 0, 32, 32};
+    SDL_Rect Camera = {0, 0, 640, 360};
 
-keytype pressedkeys[KEY_COUNT] = {0};
-player Player = {0, 300 - 35, 0, falling};
+    keytype pressedkeys[KEY_COUNT] = {0};
+    player Player = {0};
 
-float current_time, previous_time, delta_time;
-float frame_start, frame_end, frame_duration;
-
-    signal(SIGSEGV, sighand);
+    float current_time, previous_time, delta_time;
+    float frame_start, frame_end, frame_duration;
     
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("Error during SDL initialization: %s\n", SDL_GetError());
@@ -45,7 +36,6 @@ float frame_start, frame_end, frame_duration;
         printf("Error during IMG initialization: %s\n", SDL_GetError());
         return 1;
     }
-    fullscreen = false;
     
     window = SDL_CreateWindow("Luno: The Moonlight Lamplighter",
         SDL_WINDOWPOS_CENTERED,
@@ -63,11 +53,15 @@ float frame_start, frame_end, frame_duration;
     
     InitRenderer(window, 640, 360);
     
-    sprites = SpriteList_Init(sprites, "assets/images/playermodel.png", plyrdst);
-    assert(sprites->Items);
+    Player.hitbox = plyrdst;
+
+    Game = game_properties_Init(1024, 512, "assets/images/background.png", Camera);
     
-    sprites = SpriteList_Add(sprites, "assets/images/background.png", bckgrnd);
-    assert(sprites->Items);
+    sprites = SpriteList_Init(sprites, "assets/images/playermodel.png", plyrdst);
+
+    SDL_Rect Backgrnd_rect = Game.Size;
+    Backgrnd_rect.y += 60;
+    sprites = SpriteList_Add(sprites, Game.BackgroundPath, Backgrnd_rect);
     
     DrawBackground();
     
@@ -92,13 +86,13 @@ float frame_start, frame_end, frame_duration;
         
         Getkey(pressedkeys);
         
-        update(pressedkeys, delta_time, &Player, window);
+        update(pressedkeys, delta_time, &Player, window, &Game);
         //printf("physics updated\n");
         
-        sprites->Items[0].rect.x = Player.x;
-        sprites->Items[0].rect.y = Player.y;
+        sprites->Items[0].rect.x = Player.hitbox.x;
+        sprites->Items[0].rect.y = Player.hitbox.y;
         
-        Render(sprites);
+        Render(sprites, &Game);
         //printf("rendered\n");
         
         frame_end = SDL_GetTicks();
