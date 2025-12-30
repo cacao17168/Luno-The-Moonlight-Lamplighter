@@ -23,6 +23,7 @@ typedef struct {
     entity_jump_state state;
     SDL_Rect hitbox;
     int health;
+    float speed;
 } player;
 
 game_properties game_properties_Init(int width, int height, const char *path, SDL_Rect Camera);

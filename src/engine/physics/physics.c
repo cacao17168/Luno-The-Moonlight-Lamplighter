@@ -7,7 +7,6 @@
 #define JUMP_SCALE 100
 #define ACCELERATION 500
 
-float speed = 0;
 bool fullscreen = false;
 
 game_properties game_properties_Init(int width, int height, const char *path, SDL_Rect Camera) {
@@ -27,9 +26,14 @@ int isCollision() {
     
 }
 
-void jump(player* plyr, float dt, game_properties *Props) {
+void jump(player* plyr, float dt, game_properties *Props, int center) {
+    int camera_center_h = Props->Camera.h / 2 + Props->Camera.y;
+    
     plyr->hitbox.y -= ceil(plyr->vy * dt);
-    Props->Camera.y -= ceil(plyr->vy * dt);
+
+    if(center)
+    Props->Camera.y = plyr->hitbox.y - Props->Camera.h / 2;
+
     plyr->vy -= 7.5f;
     printf("jump changed: %f\n", ceil(plyr->vy * dt));
     printf("y = %d\n", plyr->hitbox.y);
@@ -37,37 +41,46 @@ void jump(player* plyr, float dt, game_properties *Props) {
 }
 
 int update(keytype keys[], float dt, player* Pl, SDL_Window* window, game_properties *Props) {
-    int grnd = Props->Size.h - Pl->hitbox.h; 
+    int grnd = Props->Size.h - Pl->hitbox.h;
+    int camera_center_h = Props->Camera.h / 2 + Props->Camera.y;
+    int camera_center_w = Props->Camera.w / 2 + Props->Camera.x;
+    int center_h = 0;
+    int center_w = 0;
+    
+    if(abs(Pl->hitbox.x - camera_center_w) <= 4) center_w = 1;
+    if(abs(Pl->hitbox.y - camera_center_h) <= 4) center_h = 1;
 
     if (keys[KEY_A] && !keys[KEY_D]) {
-        speed += (ACCELERATION * dt) ;
+        Pl->speed += (ACCELERATION * dt) ;
         
-        if (speed > 150) speed = 150;
+        if (Pl->speed > 150) Pl->speed = 150;
         printf("x a before: %d\n", Pl->hitbox.x);
         
-        Pl->hitbox.x -= floor(speed * dt) ;
-
-        if(Pl->hitbox.x == (Props->Camera.h / 2))
-        Props->Camera.x -= floor(speed * dt);
+        Pl->hitbox.x -= floor(Pl->speed * dt) ;
         
+        if(center_w)
+        Props->Camera.x = Pl->hitbox.x - Props->Camera.w / 2;
+
         printf("x a after: %d\n", Pl->hitbox.x);
-        printf("a: %f\n", speed * dt);
+        printf("a: %f\n", Pl->speed * dt);
     }
 
     if (keys[KEY_D] && !keys[KEY_A]) {
-        speed += ACCELERATION * dt;
+        Pl->speed += ACCELERATION * dt;
         
-        if (speed > 150) speed = 150;
+        if (Pl->speed > 150) Pl->speed = 150;
         printf("x d before: %d\n", Pl->hitbox.x);
         
-        Pl->hitbox.x += floor(speed * dt);
-        Props->Camera.x += floor(speed * dt);
-        
+        Pl->hitbox.x += floor(Pl->speed * dt);
+
+        if(center_w)
+        Props->Camera.x = Pl->hitbox.x - Props->Camera.w / 2;
+
         printf("x d after: %d\n", Pl->hitbox.x);
-        printf("d: %f\n", speed * dt);
+        printf("d: %f\n", Pl->speed * dt);
     }
     
-    if (!keys[KEY_A] && !keys[KEY_D]) speed = 0;
+    if (!keys[KEY_A] && !keys[KEY_D]) Pl->speed = 0;
     if (Pl->hitbox.y >= grnd) Pl->vy = 0;
     
     if (keys[KEY_SPACE]) {
@@ -80,7 +93,7 @@ int update(keytype keys[], float dt, player* Pl, SDL_Window* window, game_proper
         }
     }
     
-    if (Pl->state == lifting) jump(Pl, dt, Props);
+    if (Pl->state == lifting) jump(Pl, dt, Props, center_h);
     if (Pl->hitbox.y <= grnd - JUMP_SCALE) Pl->state = falling;
     printf("state processed\n");
     
@@ -89,7 +102,10 @@ int update(keytype keys[], float dt, player* Pl, SDL_Window* window, game_proper
         if (Pl->vy > 75.0f) Pl->vy = 75.0f;
         
         Pl->hitbox.y += ceil(Pl->vy * dt);
-        Props->Camera.y += ceil(Pl->vy * dt);
+    
+        if(center_h)
+        Props->Camera.y = Pl->hitbox.y - Props->Camera.h / 2;
+
         printf("falled %f pixels\n", ceil(Pl->vy * dt));
         printf("y = %d\n", Pl->hitbox.y);
         printf("jump processed\n");
@@ -107,7 +123,5 @@ int update(keytype keys[], float dt, player* Pl, SDL_Window* window, game_proper
             fullscreen = false;
         }
     }
-
-    if (Pl->hitbox.x != Props->Camera.x || Pl->hitbox.y != Props->Camera.y) Props->Camera = Pl->hitbox;
     return 0;
 }
