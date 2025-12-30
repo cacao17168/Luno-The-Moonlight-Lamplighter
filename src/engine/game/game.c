@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 #include "input.h"
@@ -60,7 +61,7 @@ SpriteList* sprites = SpriteList_Create();
     sprites = SpriteList_Init(sprites, "assets/images/playermodel.png", plyrdst);
 
     SDL_Rect Backgrnd_rect = Game.Size;
-    Backgrnd_rect.y += 60;
+    Backgrnd_rect.y += 84;
     sprites = SpriteList_Add(sprites, Game.BackgroundPath, Backgrnd_rect);
     
     DrawBackground();
@@ -99,7 +100,7 @@ SpriteList* sprites = SpriteList_Create();
         frame_duration = frame_end - frame_start;
         
         if ((frame_duration / 1000) < ONE_FRAME) {
-            SDL_Delay(ONE_FRAME - (frame_duration / 1000));
+            usleep((ONE_FRAME - (frame_duration / 1000)) * 1000);
         }
     }
     
