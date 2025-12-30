@@ -46,6 +46,8 @@ int update(keytype keys[], float dt, player* Pl, SDL_Window* window, game_proper
         printf("x a before: %d\n", Pl->hitbox.x);
         
         Pl->hitbox.x -= floor(speed * dt) ;
+
+        if(Pl->hitbox.x == (Props->Camera.h / 2))
         Props->Camera.x -= floor(speed * dt);
         
         printf("x a after: %d\n", Pl->hitbox.x);
@@ -105,5 +107,7 @@ int update(keytype keys[], float dt, player* Pl, SDL_Window* window, game_proper
             fullscreen = false;
         }
     }
+
+    if (Pl->hitbox.x != Props->Camera.x || Pl->hitbox.y != Props->Camera.y) Props->Camera = Pl->hitbox;
     return 0;
 }
