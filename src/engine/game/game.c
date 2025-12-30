@@ -56,12 +56,12 @@ SpriteList* sprites = SpriteList_Create();
     
     Player.hitbox = plyrdst;
 
-    Game = game_properties_Init(1024, 512, "assets/images/background.png", Camera);
+    Game = game_properties_Init(1024, 512, "assets/images/testbackgrnd.png", Camera);
     
     sprites = SpriteList_Init(sprites, "assets/images/playermodel.png", plyrdst);
 
     SDL_Rect Backgrnd_rect = Game.Size;
-    Backgrnd_rect.y += 84;
+    Backgrnd_rect.y += 111;
     sprites = SpriteList_Add(sprites, Game.BackgroundPath, Backgrnd_rect);
     
     DrawBackground();
