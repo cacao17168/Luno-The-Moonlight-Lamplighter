@@ -24,6 +24,7 @@ typedef struct {
     SDL_Rect hitbox;
     int health;
     float speed;
+    int last_direction;
 } player;
 
 game_properties game_properties_Init(int width, int height, const char *path, SDL_Rect Camera);

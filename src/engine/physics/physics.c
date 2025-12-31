@@ -47,10 +47,14 @@ int update(keytype keys[], float dt, player* Pl, SDL_Window* window, game_proper
     int center_h = 0;
     int center_w = 0;
     
+    Pl->last_direction = (keys[KEY_A] ? -1 : (keys[KEY_D] ? 1 : 0));
+
     if(abs(Pl->hitbox.x - camera_center_w) <= 4) center_w = 1;
     if(abs(Pl->hitbox.y - camera_center_h) <= 4) center_h = 1;
 
     if (keys[KEY_A] && !keys[KEY_D]) {
+        if(Pl->last_direction != -1) Pl->speed = 0;
+
         Pl->speed += (ACCELERATION * dt) ;
         
         if (Pl->speed > 150) Pl->speed = 150;
@@ -66,6 +70,8 @@ int update(keytype keys[], float dt, player* Pl, SDL_Window* window, game_proper
     }
 
     if (keys[KEY_D] && !keys[KEY_A]) {
+        if(Pl->last_direction != 1) Pl->speed = 0;
+        
         Pl->speed += ACCELERATION * dt;
         
         if (Pl->speed > 150) Pl->speed = 150;
@@ -80,7 +86,11 @@ int update(keytype keys[], float dt, player* Pl, SDL_Window* window, game_proper
         printf("d: %f\n", Pl->speed * dt);
     }
     
-    if (!keys[KEY_A] && !keys[KEY_D]) Pl->speed = 0;
+    if (!keys[KEY_A] && !keys[KEY_D]) {
+        Pl->speed = 0;
+    } else if (keys[KEY_A] && keys[KEY_D]) {
+        Pl->speed = 0;
+    }
     if (Pl->hitbox.y >= grnd) Pl->vy = 0;
     
     if (keys[KEY_SPACE]) {
