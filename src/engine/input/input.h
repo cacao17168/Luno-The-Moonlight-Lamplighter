@@ -3,6 +3,12 @@
 #ifndef INPUT_H_
 #define INPUT_H_
 
+#ifdef TEST
+extern const Uint8* (Input_GetKeyboardState)(int* numkeys);
+#else
+#define Input_GetKeyboardState SDL_GetKeyboardState;
+#endif
+
 //keytype enum for tracking specific key states
 typedef enum {
     KEY_W,

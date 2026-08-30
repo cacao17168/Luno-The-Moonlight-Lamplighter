@@ -15,7 +15,7 @@ int Getkey(keytype keys[]) {
         return 1; //check for null pointer
     }
     
-    const Uint8* SDLkeys = SDL_GetKeyboardState(NULL); //get current keyboard state
+    const Uint8* SDLkeys = Input_GetKeyboardState(NULL); //get current keyboard state
 
     keys[KEY_W] = SDLkeys[SDL_SCANCODE_W]; //
     keys[KEY_A] = SDLkeys[SDL_SCANCODE_A]; //
