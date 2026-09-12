@@ -3,8 +3,6 @@
 #include "input.h" //for keytype enum
 #include <SDL2/SDL.h>
 
-extern bool fullscreen; //variable to track fullscreen state
-
 /* game_properties is a structure containing map size, path to background sprite, blocks data for collisions(a dynamic array), count of blocks, and camera position */
 
 typedef struct {
