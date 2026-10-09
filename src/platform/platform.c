@@ -4,11 +4,13 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_video.h>
+#inxlude <SDL2/SDL_image.h>
 
 int app_init(app_t *app, const char *title, int w, int h, int log_w, int log_h) {
     if(!app || !title) return 1;
 
     if(SDL_Init(SDL_INIT_VIDEO) < 0) return 2;
+    IMG_Init(IMG_INIT_PNG);
 
     app->window.height = h;
     app->window.width = w;
@@ -61,4 +63,13 @@ int renderer_end(renderer_t *r) {
 
     SDL_RenderPresent(r->sdl);
     return 0;
+}
+
+texture_t* load_texture(renderer_t *r, const char *path) {
+    if(!r || !path) return NULL;
+    texture_t t;
+    t->path = path;
+    t->surf = IMG_Load(t->path);
+    t->texture = SDL_CreateTextureFromSurface(r->sdl, t->path);
+    return &t;
 }
