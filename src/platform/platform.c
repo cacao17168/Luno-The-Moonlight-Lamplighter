@@ -2,6 +2,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_render.h>
+#include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_video.h>
 #include <SDL2/SDL_image.h>
@@ -72,4 +73,12 @@ texture_t* load_texture(renderer_t *r, const char *path) {
     t->surf = IMG_Load(t->path);
     t->texture = SDL_CreateTextureFromSurface(r->sdl, t->surf);
     return t;
+}
+
+void free_texture(texture_t *t) {
+    if(!t) return;
+
+    SDL_FreeSurface(t->surf);
+    SDL_DestroyTexture(t->texture);
+    free(t);
 }
