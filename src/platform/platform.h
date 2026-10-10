@@ -49,6 +49,6 @@ int renderer_begin(renderer_t *r);
 int renderer_end(renderer_t *r);
 
 texture_t* load_texture(renderer_t *r, const char *path);
-void free_texture(texture_t *t)
+void free_texture(texture_t *t);
 
 #endif
