@@ -7,6 +7,40 @@
 #include <SDL2/SDL_video.h>
 #include <SDL2/SDL_image.h>
 
+typedef struct renderer_s {
+    SDL_Renderer *sdl;
+    SDL_Window *window_link;
+    int logic_h;
+    int logic_w;
+} renderer_t;
+
+typedef struct window_s {
+    SDL_Window *sdl_wnd;
+    int height;
+    int width;
+    const char *title;
+} window_t;
+
+typedef struct game_time_s {
+    Uint64 prev_ticks;
+    Uint64 cur_ticks;
+    Uint64 freq;
+    double total_pass;
+} game_time_t;
+
+typedef struct app_s {
+    window_t window;
+    renderer_t renderer;
+    game_time_t time;
+    int running; //1 when running and 0 when not running
+} app_t;
+
+typedef struct texture_s {
+    const char *path;
+    SDL_Surface *surf;
+    SDL_Texture *texture;
+} texture_t;
+
 int app_init(app_t *app, const char *title, int w, int h, int log_w, int log_h) {
     if(!app || !title) return 1;
 

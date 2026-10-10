@@ -1,43 +1,15 @@
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_stdinc.h>
-#include <SDL2/SDL_surface.h>
 
-typedef struct {
-    SDL_Renderer *sdl;
-    SDL_Window *window_link;
-    int logic_h;
-    int logic_w;
-} renderer_t;
+typedef struct renderer_s renderer_t;
 
-typedef struct {
-    SDL_Window *sdl_wnd;
-    int height;
-    int width;
-    const char *title;
-} window_t;
+typedef struct window_s window_t;
 
-typedef struct {
-    Uint64 prev_ticks;
-    Uint64 cur_ticks;
-    Uint64 freq;
-    double total_pass;
-} game_time_t;
+typedef struct game_time_s game_time_t;
 
-typedef struct {
-    window_t window;
-    renderer_t renderer;
-    game_time_t time;
-    int running; //1 when running and 0 when not running
-} app_t;
+typedef struct app_s app_t;
 
-typedef struct {
-    const char *path;
-    SDL_Surface *surf;
-    SDL_Texture *texture;
-} texture_t;
+typedef struct texture_s texture_t;
 
 int app_init(app_t *app, const char *title, int w, int h, int log_w, int log_h);
 int app_shutdown(app_t *app);
