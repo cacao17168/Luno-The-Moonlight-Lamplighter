@@ -4,7 +4,7 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_video.h>
-#inxlude <SDL2/SDL_image.h>
+#include <SDL2/SDL_image.h>
 
 int app_init(app_t *app, const char *title, int w, int h, int log_w, int log_h) {
     if(!app || !title) return 1;
@@ -67,9 +67,9 @@ int renderer_end(renderer_t *r) {
 
 texture_t* load_texture(renderer_t *r, const char *path) {
     if(!r || !path) return NULL;
-    texture_t t;
+    texture_t *t = malloc(sizeof(texture_t));
     t->path = path;
     t->surf = IMG_Load(t->path);
-    t->texture = SDL_CreateTextureFromSurface(r->sdl, t->path);
-    return &t;
+    t->texture = SDL_CreateTextureFromSurface(r->sdl, t->surf);
+    return t;
 }
