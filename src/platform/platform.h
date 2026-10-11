@@ -17,10 +17,10 @@ int app_poll_quit(app_t *app);
 
 float time_tick(game_time_t *time);
 
-int renderer_begin(renderer_t *r);
-int renderer_end(renderer_t *r);
+int platform_renderer_begin(renderer_t *r);
+int platform_renderer_end(renderer_t *r);
 
-texture_t* load_texture(renderer_t *r, const char *path);
-void free_texture(texture_t *t);
+texture_t* platform_load_texture(renderer_t *r, const char *path);
+void platfrom_free_texture(texture_t *t);
 
 #endif

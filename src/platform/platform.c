@@ -86,21 +86,21 @@ float time_tick(game_time_t *time) {
     return (float)(time->cur_ticks - time->prev_ticks) / time->freq;
 }
 
-int renderer_begin(renderer_t *r) {
+int platform_renderer_begin(renderer_t *r) {
     if(!r) return 1;
 
     SDL_RenderClear(r->sdl);
     return 0;
 }
 
-int renderer_end(renderer_t *r) {
+int platform_renderer_end(renderer_t *r) {
     if(!r) return 1;
 
     SDL_RenderPresent(r->sdl);
     return 0;
 }
 
-texture_t* load_texture(renderer_t *r, const char *path) {
+texture_t* platform_load_texture(renderer_t *r, const char *path) {
     if(!r || !path) return NULL;
     texture_t *t = malloc(sizeof(texture_t));
     t->path = path;
@@ -109,7 +109,7 @@ texture_t* load_texture(renderer_t *r, const char *path) {
     return t;
 }
 
-void free_texture(texture_t *t) {
+void platform_free_texture(texture_t *t) {
     if(!t) return;
 
     SDL_FreeSurface(t->surf);
