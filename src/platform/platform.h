@@ -21,6 +21,6 @@ int platform_renderer_begin(renderer_t *r);
 int platform_renderer_end(renderer_t *r);
 
 texture_t* platform_load_texture(renderer_t *r, const char *path);
-void platfrom_free_texture(texture_t *t);
+void platform_free_texture(texture_t *t);
 
 #endif
