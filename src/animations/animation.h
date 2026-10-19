@@ -1,8 +1,13 @@
 #ifndef ANIMATION_H_
 #define ANIMATION_H_
 
+/* anim_clip_t adapted for sprite animation via individual files.
+ * This reduces perfomance and big projects with more than 1000 sprites should use spritelists,
+ * but in small games spritelists will give a little impact,
+ * so using individual textures is more convenient
+ */
 typedef struct {
-    int start_frame;
+    char **t_paths;
     int frame_count;
     float frame_time;
     int loop; //0 on false, 1 on true
