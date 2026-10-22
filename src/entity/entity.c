@@ -9,20 +9,6 @@ void world_init(world_t *w) {
     w->input = NULL;
 }
 
-entity_t *world_spawn(world_t *w) {
-    if(!w) return NULL;
-    if(w->count >= MAX_ENTITIES) return NULL;
-
-    entity_t *e = &w->entities[w->count++];
-    memset(e, 0, sizeof(*e));
-
-    e->alive = 1;
-    e->team = 1;
-    e->lifetime = -1.0f;
-    e->facing = 1;
-    return e;
-}
-
 entity_t *world_player(world_t *w) {
     for(size_t i = 0; i < w->count; i++) {
         if(w->entities[i].type == ENTITY_PLAYER && w->entities[i].alive) {

@@ -50,7 +50,6 @@ struct world_s {
 };
 
 void world_init(world_t *w);
-entity_t *world_spawn(world_t *w);
 entity_t *world_player(world_t *w);
 
 entity_t *spawn_player(world_t *w, float x, float y);
