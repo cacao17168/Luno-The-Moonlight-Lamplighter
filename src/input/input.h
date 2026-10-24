@@ -9,6 +9,7 @@ typedef enum {
     KEY_SPACE,
     KEY_F11,
     KEY_ESC,
+    KEY_MOUSE_LMB,
     KEY_COUNT
 } kb_key_t;
 
