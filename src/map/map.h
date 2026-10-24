@@ -16,7 +16,9 @@ typedef struct {
 } map_t;
 
 map_t* map_load(const char *filename);
-
 void map_free(map_t *map);
+
+int map_is_solid(map_t *map, int world_x, int world_y);
+tile_type map_get_tile(const map_t *map, int grid_x, int grid_y);
 
 #endif
