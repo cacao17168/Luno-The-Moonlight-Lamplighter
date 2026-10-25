@@ -179,8 +179,11 @@ static void enemy_on_touch(entity_t *self, entity_t *other, world_t *w) {
 
     if(other->team == self->team) return;
 
+    if(self->touch_cooldown > 0.0f) return;
+
     if(other->damage > 0) {
         self->health -= other->damage;
+        self->touch_cooldown = ENEMY_TOUCH_CD;
     }
 
     if(self->health <= 0) {
