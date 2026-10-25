@@ -2,6 +2,7 @@
 #define ENTITY_H_
 #include "../animations/animation.h"
 #include "../input/input.h"
+#include "../map/map.h"
 
 #define MAX_ENTITIES 256
 
@@ -32,6 +33,7 @@ struct entity_s {
 
     float lifetime;
     float touch_cooldown;
+    float fire_cooldown;
 
     anim_state_t anim;
     int facing;
@@ -47,6 +49,7 @@ struct world_s {
     int count;
 
     const kb_key_t *input;
+    map_t *map;
 };
 
 void world_init(world_t *w);
