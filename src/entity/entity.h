@@ -57,7 +57,7 @@ void world_init(world_t *w);
 entity_t *world_player(world_t *w);
 
 entity_t *spawn_player(world_t *w, float x, float y);
-entity_t *spawn_enemy(world_t *w, float x, float y);
+entity_t *spawn_enemy(world_t *w, float x, float y, int width, int height);
 entity_t *spawn_projectile(world_t *w, float x, float y, float vx, float vy, int team, int damage);
 
 void world_update(world_t *w, kb_key_t *in, float dt);
