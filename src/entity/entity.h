@@ -34,6 +34,7 @@ struct entity_s {
     float lifetime;
     float touch_cooldown;
     float fire_cooldown;
+    float regen_cooldown;
 
     anim_state_t anim;
     int facing;

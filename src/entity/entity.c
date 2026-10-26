@@ -11,7 +11,9 @@
 
 #define PLAYER_FIRE_CD 0.18f
 #define PLAYER_TOUCH_CD 0.75f
+#define PLAYER_REGEN_CD 1.0f
 #define PLAYER_SHOT_SPEED 520.0f
+#define PLAYER_MAX_HEALTH 6
 
 #define ENEMY_SPEED 110.0f
 #define ENEMY_GRAVITY 1500.0f
@@ -157,6 +159,13 @@ static void player_update(entity_t *self, world_t *w, float dt) {
         self->fire_cooldown -= dt;
         if(self->fire_cooldown < 0.0f) self->touch_cooldown = 0.0f;
     }
+    if(self->regen_cooldown > 0.0f) {
+        self->regen_cooldown -= dt;
+        if(self->regen_cooldown < 0.0f) self->regen_cooldown = 0.0f;
+    } else if(self->health < PLAYER_MAX_HEALTH && self->touch_cooldown <= 0.0f) {
+        self->health += 1;
+        self->regen_cooldown = PLAYER_REGEN_CD;
+    }
 
     if(shoot && self->fire_cooldown <= 0.0f) {
         float muzzle_x = self->x + self->w * 0.5f + (float)self->facing * (self->w * 0.5f + 4.0f);
@@ -299,7 +308,7 @@ entity_t *spawn_player(world_t *w, float x, float y) {
     e->vy = 0;
     e->w = 32;
     e->h = 32;
-    e->health = 6;
+    e->health = PLAYER_MAX_HEALTH;
     e->damage = 2;
     e->team = 0;
     e->update = player_update;
