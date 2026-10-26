@@ -5,6 +5,10 @@ typedef struct renderer_s renderer_t;
 
 typedef struct window_s window_t;
 
+typedef struct color_s color_t;
+
+typedef struct font_s font_t;
+
 typedef struct game_time_s game_time_t;
 
 typedef struct app_s app_t;
@@ -22,5 +26,8 @@ int platform_renderer_end(renderer_t *r);
 
 texture_t* platform_load_texture(renderer_t *r, const char *path);
 void platform_free_texture(texture_t *t);
+
+font_t *platform_load_ttf(char *filename);
+void platform_free_ttf(font_t *f);
 
 #endif

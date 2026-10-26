@@ -22,6 +22,18 @@ typedef struct window_s {
     const char *title;
 } window_t;
 
+typedef struct color_s {
+    Uint8 r;
+    Uint8 g;
+    Uint8 b;
+    Uint8 a;
+} color_t;
+
+typedef struct font_s {
+    TTF_Font* font;
+    const char *ttf_file;
+} font_t;
+
 typedef struct game_time_s {
     Uint64 prev_ticks;
     Uint64 cur_ticks;
@@ -33,6 +45,7 @@ typedef struct app_s {
     window_t window;
     renderer_t renderer;
     game_time_t time;
+    font_t main_font;
     int running; //1 when running and 0 when not running
 } app_t;
 
@@ -119,4 +132,21 @@ void platform_free_texture(texture_t *t) {
     SDL_FreeSurface(t->surf);
     SDL_DestroyTexture(t->texture);
     free(t);
+}
+
+font_t *platform_load_ttf(char *filename) {
+    if(!filename) return NULL;
+    TTF_Font* ttf_font = TTF_OpenFont(filename, 8);
+    if(!ttf_font) return NULL;
+    font_t *font = malloc(sizeof(font_t));
+    font->font = ttf_font;
+    font->ttf_file = filename;
+    return font;
+}
+
+void platform_free_ttf(font_t *f) {
+    if(!f) return;
+    TTF_CloseFont(f->font);
+    free(f);
+    f = NULL;
 }
