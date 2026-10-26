@@ -1,22 +1,23 @@
 # Main
 This is the source code of my game "Luno: The Moonlight Lamplighter"
 # Installation
-At first you need to install dependencies.
+## Dependencies
 Using your package manager install:
 
-```sh
-libsdl2-dev libsdl2-image-dev
-```
+| Distribution | Package Name | Installation command |
+| --- | --- | --- |
+| Debian/Ubuntu | libsdl2-ttf-dev | sudo apt install libsdl2-ttf-dev |
+| Arch linux | sdl2_ttf | sudo pacman -S sdl2_ttf |
+| Fedora | SDL2_ttf-devel | sudo dnf install SDL2_ttf-devel |
 
-Copy repository in any folder:
+## Copy repository
 
 ```sh
 git clone https://github.com/cacao17168/Luno-The-Moonlight-Lamplighter.git
 ```
 
-Then execute a makefile:
+## Execute makefile:
+
 ```sh
 make
 ```
-
-After these steps just execute a binary file.
