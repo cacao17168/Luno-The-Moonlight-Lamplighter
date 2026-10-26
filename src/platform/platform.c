@@ -6,6 +6,7 @@
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_video.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 typedef struct renderer_s {
     SDL_Renderer *sdl;
@@ -45,7 +46,8 @@ int app_init(app_t *app, const char *title, int w, int h, int log_w, int log_h) 
     if(!app || !title) return 1;
 
     if(SDL_Init(SDL_INIT_VIDEO) < 0) return 2;
-    IMG_Init(IMG_INIT_PNG);
+    if(IMG_Init(IMG_INIT_PNG) <= 0) return 3;
+    if(TTF_Init() < 0) return 4;
 
     app->window.height = h;
     app->window.width = w;
@@ -66,6 +68,8 @@ int app_shutdown(app_t *app) {
     SDL_DestroyRenderer(app->renderer.sdl);
     SDL_DestroyWindow(app->window.sdl_wnd);
     SDL_Quit();
+    IMG_Quit();
+    TTF_Quit();
     return 0;
 }
 
