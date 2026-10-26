@@ -41,8 +41,8 @@ void map_free(map_t *map) {
 int map_is_solid(map_t *map, int world_x, int world_y) {
     if(!map) return -1;
 
-    int grid_x = ceil((float)world_x / map->tile_size);
-    int grid_y = ceil((float)world_y / map->tile_size);
+    int grid_x = (int)floorf((float)world_x / map->tile_size);
+    int grid_y = (int)floorf((float)world_y / map->tile_size);
 
     if(grid_x < 0 || grid_x >= map->width || grid_y < 0 || grid_y >= map->height) {
         return 1;
