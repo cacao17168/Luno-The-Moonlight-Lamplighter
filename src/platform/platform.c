@@ -1,6 +1,7 @@
 #include "platform.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_timer.h>
@@ -149,4 +150,17 @@ void platform_free_ttf(font_t *f) {
     TTF_CloseFont(f->font);
     free(f);
     f = NULL;
+}
+
+texture_t *platform_render_blended(renderer_t *r, font_t *f, const char *text, color_t *col) {
+    if(!f || !text || !col) return NULL;
+    SDL_Surface *s = TTF_RenderUTF8_Blended(f->font, text, *(SDL_Color *)col);
+    if(!s) return NULL;
+    SDL_Texture *t = SDL_CreateTextureFromSurface(r->sdl, s);
+    if(!t) return NULL;
+    texture_t *out = malloc(sizeof(texture_t));
+    out->texture = t;
+    out->surf = s;
+    out->path = NULL;
+    return out;
 }
