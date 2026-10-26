@@ -23,6 +23,8 @@
 #define ENEMY_SHOT_SPEED 380.0f
 #define ENEMY_AGGRO_RANGE 280.0f
 
+#define PROJECTILE_SPEED 520.0f
+
 static const anim_clip_t clip;
 
 static int rect_hits_solid(map_t *m, float x, float y, int w, int h) {
@@ -106,6 +108,12 @@ static int platform_below(map_t *m, float gx, float gy) {
     if(!m) return -1;
     tile_type t = map_get_tile(m, gx, gy);
     return (t == TILE_PLATFORM);
+}
+
+static int aabb_hit(float ax, float ay, int aw, int ah,
+                    float bx, float by, int bw, int bh) {
+    return ax < bx + (float)bw && ax + (float)aw > bx &&
+           ay < by + (float)bh && ay + (float)ah > by;
 }
 
 static void player_update(entity_t *self, world_t *w, float dt) {
@@ -266,6 +274,39 @@ static void enemy_on_touch(entity_t *self, entity_t *other, world_t *w) {
     }
 }
 
+static void projectile_update(entity_t *self, world_t *w, float dt) {
+    if(!self || !w || dt < 0.0f) return;
+    if(!self->alive) return;
+
+    self->lifetime -= dt;
+    if(self->lifetime <= 0.0f) {
+        self->alive = 0;
+        return;
+    }
+
+    self->facing = (self->vx >= 0.0f) ? 1 : -1;
+
+    self->vx = (float)self->facing * PROJECTILE_SPEED;
+    self->x += self->vx * dt;
+
+    self->y += self->vy * dt;
+
+    if(w->map) {
+        int cx = (int)floorf(self->x + self->w * 0.5f);
+        int cy = (int)floorf(self->y + self->h * 0.5f);
+        if(map_is_solid(w->map, cx, cy)) {
+            self->alive = 0;
+            return;
+        }
+        float wpx = floorf(w->map->width * w->map->tile_size);
+        float hpx = floorf(w->map->height * w->map->tile_size);
+        if(self->x < -64.0f || self->x > wpx + 64.0f || self->y < -64.0f || self->y > hpx + 64.0f) {
+            self->alive = 0;
+            return;
+        }
+    }
+}
+
 static void projectile_on_touch(entity_t *self, entity_t *other, world_t *w) {
     (void)w;
     if(!self || !other) return;
@@ -315,4 +356,94 @@ entity_t *spawn_player(world_t *w, float x, float y) {
     e->on_touch = player_on_touch;
 
     return e;
+}
+
+entity_t *spawn_enemy(world_t *w, float x, float y, int width, int height) {
+    if(!w) return NULL;
+    if(w->count >= MAX_ENTITIES) return NULL;
+
+    entity_t *e = &w->entities[w->count++];
+    memset(e, 0, sizeof(*e));
+
+    e->type = ENTITY_ENEMY;
+    e->alive = 1;
+    e->x = x;
+    e->y = y;
+    e->vx = 0;
+    e->vy = 0;
+    e->w = width;
+    e->h = height;
+    e->health = 8;
+    e->team = 1;
+    e->update = enemy_update;
+    e->on_touch = enemy_on_touch;
+
+    return e;
+}
+
+entity_t *spawn_projectile(world_t *w, float x, float y, float vx, float vy, int team, int damage) {
+    if(!w) return NULL;
+    if(w->count >= MAX_ENTITIES) return NULL;
+
+    entity_t *e = &w->entities[w->count++];
+    memset(e, 0, sizeof(*e));
+
+    e->type = ENTITY_PROJECTILE;
+    e->alive = 1;
+    e->x = x;
+    e->y = y;
+    e->vx = vx;
+    e->vy = vy;
+    e->damage = damage;
+    e->team = team;
+    e->lifetime = 3.0f;
+    e->update = projectile_update;
+    e->on_touch = projectile_on_touch;
+
+    return e;
+}
+
+void world_update(world_t *w, kb_key_t *in, float dt) {
+    if(!w || !in || dt < 0.0f) return;
+
+    w->input = in;
+    for(int i = 0; i < w->count; i++) {
+        entity_t *e = &w->entities[i];
+        if(!e->alive) return;
+        if(e->update) e->update(e, w, dt);
+    }
+
+    for(int i = 0; i < w->count; i++) {
+        entity_t *a = &w->entities[i];
+        if(!a->alive) continue;
+
+        for(int j = i + 1; j < w->count; j++) {
+            entity_t *b = &w->entities[j];
+            if(!b->alive) continue;
+            if(a->team == b->team) continue;
+
+            if(!aabb_hit(a->x, a->y, a->w, a->h, b->x, b->y, b->w, b->h)) continue;
+
+            if(a->type == ENTITY_PROJECTILE) {
+                if(b->on_touch) b->on_touch(b, a, w);
+                a->alive = 0;
+            } else if(b->type == ENTITY_PROJECTILE) {
+                if(a->on_touch) a->on_touch(a, b, w);
+                b->alive = 0;
+            } else {
+                if(a->on_touch) a->on_touch(a, b, w);
+                if(b->on_touch) b->on_touch(b, a, w);
+            }
+        }
+    }
+
+    int i = 0;
+    while(i < w->count) {
+        if(!w->entities[i].alive) {
+            w->entities[i] = w->entities[w->count - 1];
+            w->count--;
+        } else {
+            i++;
+        }
+    }
 }
