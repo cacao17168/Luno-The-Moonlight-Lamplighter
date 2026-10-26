@@ -6,9 +6,9 @@ Using your package manager install:
 
 | Distribution | Package Name | Installation command |
 | --- | --- | --- |
-| Debian/Ubuntu | libsdl2-ttf-dev | sudo apt install libsdl2-ttf-dev |
-| Arch linux | sdl2_ttf | sudo pacman -S sdl2_ttf |
-| Fedora | SDL2_ttf-devel | sudo dnf install SDL2_ttf-devel |
+| Debian/Ubuntu | `libsdl2-ttf-dev` | `sudo apt install libsdl2-ttf-dev` |
+| Arch linux | `sdl2_ttf` | `sudo pacman -S sdl2_ttf` |
+| Fedora | `SDL2_ttf-devel` | `sudo dnf install SDL2_ttf-devel` |
 
 ## Copy repository
 
