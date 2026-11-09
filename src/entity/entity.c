@@ -165,7 +165,7 @@ static void player_update(entity_t *self, world_t *w, float dt) {
     }
     if(self->fire_cooldown > 0.0f) {
         self->fire_cooldown -= dt;
-        if(self->fire_cooldown < 0.0f) self->touch_cooldown = 0.0f;
+        if(self->fire_cooldown < 0.0f) self->fire_cooldown = 0.0f;
     }
     if(self->regen_cooldown > 0.0f) {
         self->regen_cooldown -= dt;
