@@ -152,11 +152,11 @@ static void player_update(entity_t *self, world_t *w, float dt) {
         self->on_ground = 0;
     }
 
-    self->x = self->vx * dt;
+    self->x += self->vx * dt;
     resolve_x(self, w->map);
 
     float prev_bottom = self->y + (float)self->h;
-    self->y = self->vy * dt;
+    self->y += self->vy * dt;
     resolve_y(self, w->map, prev_bottom);
 
     if(self->touch_cooldown > 0.0f) {
