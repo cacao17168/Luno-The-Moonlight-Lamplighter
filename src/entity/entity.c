@@ -144,7 +144,7 @@ static void player_update(entity_t *self, world_t *w, float dt) {
 
     if(!self->on_ground) {
         self->vy += PLAYER_GRAVITY * dt;
-        if(self->vx > PLAYER_MAX_FALL) self->vy = PLAYER_MAX_FALL;
+        if(self->vy > PLAYER_MAX_FALL) self->vy = PLAYER_MAX_FALL;
     }
 
     if(jump & self->on_ground) {
