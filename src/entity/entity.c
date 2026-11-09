@@ -29,18 +29,11 @@ static const anim_clip_t clip;
 
 static int rect_hits_solid(map_t *m, float x, float y, int w, int h) {
     if(!m) return -1;
+    (void)w;
+    (void)h;
 
-    int ts = m->tile_size;
-    int gx0 = (int)floorf(x / ts);
-    int gx1 = (int)floorf((x + w - 1) / ts);
-    int gy0 = (int)floorf(y / ts);
-    int gy1 = (int)floorf((y + h - 1) / ts);
+    if(map_is_solid(m, x, y) == TILE_SOLID) return 1;
 
-    for(int gy = gy0; gy <= gy1; gy++) {
-        for(int gx = gx0; gx <= gx1; gx++) {
-            if(map_is_solid(m, gx, gy) == TILE_SOLID) return 1;
-        }
-    }
     return 0;
 }
 
